@@ -11,7 +11,7 @@ dependencies {
 
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
     implementation("io.netty:netty-codec:4.1.79.Final")
     implementation("io.netty:netty-codec-haproxy:4.1.79.Final")
     implementation("org.bstats:bstats-bukkit:3.0.2")

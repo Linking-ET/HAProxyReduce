@@ -14,7 +14,6 @@ on:
           - release
           - snapshot
   push:
-    branches: [ * ]
   pull_request: 
 
 jobs:

@@ -37,14 +37,21 @@ jobs:
       - name: 构建项目
         run: |
           if [ "${{ github.event.inputs.buildType }}" = "snapshot" ]; then
-            ./gradlew collectJars -PversionSuffix=-SNAPSHOT
+            ./gradlew build -PversionSuffix=-SNAPSHOT
           else
-            ./gradlew collectJars
+            ./gradlew build
           fi
+
+      - name: 收集构建产物
+        run: |
+          mkdir -p build-artifacts
+          cp paper/build/libs/*.jar build-artifacts/
+          cp velocity/build/libs/*.jar build-artifacts/
+          ls -l build-artifacts/
 
       - name: 上传构建产物
         uses: actions/upload-artifact@v4
         with:
-          name: haproxy-reduce-builds-artifact
-          path: build/
-          retention-days: 30
+          name: haproxy-reduce-builds
+          path: build-artifacts/*.jar
+          retention-days: 14

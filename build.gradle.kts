@@ -32,3 +32,17 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+tasks.register<Sync>("collectJars") {
+    group = "build"
+    description = "Copy every subproject's build/libs/*.jar into build/{project}/build/libs/"
+    dependsOn(tasks.named("build"))
+    subprojects.forEach { sub ->
+        from(sub.layout.buildDirectory.dir("libs")) {
+            include("*.jar")
+            // 搬过去时自动套两层目录：{子项目名}/build/libs/
+            into("${sub.name}/build/libs")
+        }
+    }
+    into(layout.buildDirectory)
+}

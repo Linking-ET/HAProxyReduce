@@ -12,6 +12,7 @@ import org.bstats.velocity.Metrics.Factory
 import org.slf4j.Logger
 import top.zient.haproxyreduce.common.MetricsId
 import top.zient.haproxyreduce.common.ProxyWhitelist
+import top.zient.haproxyreduce.common.ProxyModeLoader
 import java.lang.invoke.MethodHandles
 import java.lang.reflect.Field
 import java.nio.file.Path
@@ -21,7 +22,7 @@ import java.nio.file.Path
     name = "HAProxyReduce",
     version = "3.2.0",
     description = "同时支持代理和直连连接",
-    authors = ["Wuchang325"]
+    authors = ["Wuchang325","XChen446"]
 )
 class VelocityMain @Inject constructor(
     private val server: ProxyServer,
@@ -39,11 +40,16 @@ class VelocityMain @Inject constructor(
                 logger.error("!!! ==============================")
             }
 
-            val whitelist = ProxyWhitelist.loadOrDefault(dataDirectory.resolve("whitelist.conf"))
-            if (whitelist.size == 0) {
-                logger.warn("代理白名单为空，将禁止所有代理连接！")
+            val configDir = dataDirectory.toAbsolutePath()
+            val ipList = ProxyWhitelist.loadOrDefault(
+                configDir.resolve("list.conf"),
+                configDir.resolve("config.yml")
+            )
+            ProxyModeLoader.mode = ProxyModeLoader.load(configDir.resolve("config.yml"))
+            if (ipList.size == 0) {
+                logger.warn("代理名单为空，请注意列表配置！")
             }
-            ProxyWhitelist.whitelist = whitelist
+            ProxyWhitelist.ipList = ipList
 
             inject()
 

@@ -12,6 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import top.zient.haproxyreduce.common.MetricsId.createWhitelistCountChart
 import top.zient.haproxyreduce.common.ProxyWhitelist
+import top.zient.haproxyreduce.common.ProxyModeLoader
 import java.lang.reflect.Field
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
@@ -50,18 +51,23 @@ class PaperMain : JavaPlugin(), Listener {
         }
 
         // 加载白名单
-        val whitelist: ProxyWhitelist
+        val ipList: ProxyWhitelist
         try {
-            whitelist = ProxyWhitelist.loadOrDefault(dataDir!!.resolve("whitelist.conf"))
+            val configDir = dataFolder.toPath().toAbsolutePath()
+            ipList = ProxyWhitelist.loadOrDefault(
+                configDir.resolve("list.conf"),
+                configDir.resolve("config.yml")
+            )
+            ProxyModeLoader.mode = ProxyModeLoader.load(configDir.resolve("config.yml"))
         } catch (e: Exception) {
             logger.error("加载白名单配置失败，插件将禁用", e)
             getServer().getPluginManager().disablePlugin(this)
             return
         }
-        ProxyWhitelist.whitelist = whitelist
+        ProxyWhitelist.ipList = ipList
 
-        if (whitelist.size === 0) {
-            logger.warn("代理白名单为空，将禁止所有代理连接！")
+        if (ipList.size == 0) {
+            logger.warn("代理名单为空，请注意列表配置！")
         }
 
         initMetrics()

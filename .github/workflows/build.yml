@@ -1,7 +1,7 @@
 # .github/workflows/build.yml
 name: 构建项目
 
-# 支持手动触发和推送到main分支时自动触发
+
 on:
   workflow_dispatch:  # 手动触发
     inputs:
@@ -14,7 +14,7 @@ on:
           - release
           - snapshot
   push:
-    branches: [ main ]
+  pull_request: 
 
 jobs:
   build:

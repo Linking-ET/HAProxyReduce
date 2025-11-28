@@ -8,7 +8,7 @@ object MetricsId {
 
     fun createWhitelistCountChart(): CustomChart {
         return SimplePie(KEY_WHITELIST_COUNT) {
-            ProxyWhitelist.whitelist?.size?.toString() ?: "0"
+            ProxyWhitelist.ipList?.size?.toString() ?: "0"
         }
     }
 }
